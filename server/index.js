@@ -10,6 +10,8 @@ router.get('/api/course-schedule', async function (ctx, next) {
   await jszwyApiService.getCustomerList(ctx, next)
 })
 
+console.log(22)
+
 router.get(/^(?!\/api\/).*/,async ctx=>{
   ctx.body=`
   <html>
@@ -23,7 +25,7 @@ router.get(/^(?!\/api\/).*/,async ctx=>{
   </head>
   <body>
   <div id="root"></div>
-  <script defer src="http://${myip}:5000/static/js/bundle.js"></script>
+  <script defer src="http://${process.argv,process.argv[2] == '118.195.233.117'?'118.195.233.117':myip}:5000/static/js/bundle.js"></script>
   </body>
 </html>
   `;
