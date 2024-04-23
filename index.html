@@ -11,16 +11,34 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="">
+    <style>
+      .flex-container {
+          display: flex;
+          justify-content: center;  /* 水平居中 */
+          align-items: center;      /* 垂直居中 */
+      }
+
+      .flex-item {
+          background-color: #4CAF50; /* 子项的背景颜色，便于观察 */
+      }
+
+    </style>
   </head>
   <body>
+    <div class="flex-container">
+      <div class="flex-item">3</div>
+      <div class="flex-item">3</div>
+  </div>
+  
+    
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
+    <!-- <script>
       axios({
         method: 'get',
         url: 'https://szddgzh.szou.edu.cn/edu-admin-api/search/course-schedule?classId=224420000012031'
       }).then(function (response) {
         console.log(111,response)
       });
-    </script>
+    </script> -->
   </body>
 </html>

@@ -23,7 +23,7 @@ router.get(/^(?!\/api\/).*/,async ctx=>{
   </head>
   <body>
   <div id="root"></div>
-  <script defer src="http://${myip}:3000/static/js/bundle.js"></script>
+  <script defer src="http://${myip}:5000/static/js/bundle.js"></script>
   </body>
 </html>
   `;
