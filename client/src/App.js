@@ -3,9 +3,11 @@ import {useState,useEffect} from 'react'
 import copy from 'copy-to-clipboard'
 import { Button,message,Col, Divider, Row,Card  } from 'antd';
 import * as moment from 'moment';
-import 'moment/locale/pt-br';
+// import 'moment/locale/pt-br';
 import './App.css';
 import queryString from 'query-string';
+
+moment.locale('zh-cn');
 
 const parsed = queryString.parse(window.location.search);
 const major = {
@@ -163,17 +165,24 @@ function App() {
       : <div>
         {
           (()=>{
-            const index = getDiff('day')+1
-            const todayInfo = dataIndex[index]
-           return <Card title={`${moment().format('YYYY-MM-DD')}`} bordered={false}>
-                  { todayInfo && todayInfo.length && todayInfo.map((item)=>{
-                    const itemData = data[item[0]][item[1]]
-                    return <div>
-                      {itemData.course}({itemData.className})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
-                      <Button type="link" onClick={()=>handleCopy(itemData)}>复制通知</Button>
-                    </div>
-                  })}
-            </Card>
+            const item=[];
+            let count=0;
+            while(count<7){
+              const index = getDiff('day')+1+count;
+              const todayInfo = dataIndex[index];
+              const momentObj = moment().add(count,'days')
+              item.push(<Card title={`${momentObj.format('YYYY-MM-DD')}(${momentObj.format('dddd')})`} bordered={false}>
+                     { todayInfo && todayInfo.length && todayInfo.map((item)=>{
+                       const itemData = data[item[0]][item[1]]
+                       return <div>
+                         {itemData.course}({itemData.className})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
+                         <Button type="link" onClick={()=>handleCopy(itemData)}>复制通知</Button>
+                       </div>
+                     })}
+               </Card>)
+              count++
+            }
+            return item
           })()
         }
       </div>
