@@ -6,12 +6,13 @@ import * as moment from 'moment';
 // import 'moment/locale/pt-br';
 import './App.css';
 import queryString from 'query-string';
+import _ from 'lodash'
 
 moment.locale('zh-cn');
 
 const parsed = queryString.parse(window.location.search);
 const major = {
-  'computer':['234420000012509','234420000014517','234420000014518','234420000012015','234420000014021','234420000014020','224420000012031','224420000014031','224420000014032','224420000012006','224420000014008','224420000014007','20243442000003','244420000012023','244420000014030','244420000014031'],
+  'computer':['234420000012509','234420000014517','234420000014518','234420000012015','234420000014021','234420000014020','224420000012031','224420000014031','224420000014032','224420000012006','224420000014008','224420000014007','244420000014030','244420000014031','244420000012023'],
  'civilengineering':['224420000014047','224420000012032','224420000014037','224420000014010','224420000014015','234420000014022','234420000012016','234420000014024','234420000014519','234420000012510','234420000014520','244420000014032','244420000012022'],
  'ecommerce':['224420000014033','224420000012039','234420000012017','234420000014023','234420000012511','234420000014516','224420000014012','20243442000001','244420000012021','244420000014029']
 }
@@ -63,23 +64,28 @@ function isPC() {
   return !isMobile;
 }
 
-const handleCopy=(data)=>{
-  let dateDes = '今天'
-  if(data.week == '星期六' || data.week == '星期日' ){
-    dateDes = data.week
-  }
-  copy(`${data.className.replace(/^\s+|\s+$/gm,'')}的同学们：
-  ${dateDes}${data.unit}有${data.teacher}老师的《${data.course}》课，
-  时间：${courseTime[data.unit]}，
-  线下地点：${data.classroom}，
-  线上地址：${data.liveClassroom}。`)
-  message.success('复制成功！')
-}
+
 
 function App() {
 
   const [data, setData] = useState([]);
   const [dataIndex, setDataIndex] = useState({});
+
+  const handleCopy=(data,todayInfo,isSame)=>{
+    todayInfo.push(true)
+    setDataIndex(_.cloneDeep(dataIndex))
+    let dateDes = '今天'
+    if(data.week == '星期六' || data.week == '星期日' ){
+      dateDes = data.week
+    }
+    const classInfo = isSame?'':`${data.className.replace(/^\s+|\s+$/gm,'')}的`
+    copy(`${classInfo}同学们：
+    ${dateDes}${data.unit}有${data.teacher}老师的《${data.course}》课，
+    时间：${courseTime[data.unit]}，
+    线下地点：${data.classroom}，
+    线上地址：${data.liveClassroom}。`)
+    message.success('复制成功！')
+  }
 
   useEffect(() => {
       // 调用 fetchData() 方法获取所有数据
@@ -141,13 +147,26 @@ function App() {
                   const todayInfo = dataIndex[(weekTotal-1)*7+day]
                     item.push(<Col span={3}>
                       <Card title={`${moment(startDay).add((weekTotal-1)*7+day-1,'day').format('YYYY-MM-DD')}(周${day})`} bordered={false}>
-                      { todayInfo && todayInfo.length && todayInfo.map((item)=>{
-                        const itemData = data[item[0]][item[1]]
-                        return <div>
-                          {itemData.course}({itemData.className})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
-                          <Button type="link" onClick={()=>handleCopy(itemData)}>复制通知</Button>
-                        </div>
-                      })}
+                      { todayInfo && todayInfo.length && todayInfo.map((item,index)=>{
+                       const itemData = data[item[0]][item[1]];
+                       let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
+                       for(let i=0;i<index;i++){
+                          lastItemData = data[todayInfo[i][0]][todayInfo[i][1]]
+                          if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1){
+                            lastSame = true;
+                          }
+                        }
+                        for(let i=index+1;i<todayInfo.length;i++){
+                          nextItemdata = data[todayInfo[i][0]][todayInfo[i][1]]
+                          if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1){
+                            nextSame = true;
+                          }
+                        }
+                       return !lastSame && <div>
+                         {itemData.course}({itemData.className}{nextSame && <span style={{color:'red'}}>合</span>})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
+                         <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,nextSame)}>复制通知</Button>
+                       </div>
+                     })}
                       </Card>
                     </Col>)
                   day++
@@ -168,15 +187,29 @@ function App() {
             const item=[];
             let count=0;
             while(count<7){
-              const index = getDiff('day')+1+count;
-              const todayInfo = dataIndex[index];
+              const dayIndex = getDiff('day')+1+count;
+              const todayInfo = dataIndex[dayIndex];
               const momentObj = moment().add(count,'days')
               item.push(<Card title={`${momentObj.format('YYYY-MM-DD')}(${momentObj.format('dddd')})`} bordered={false}>
-                     { todayInfo && todayInfo.length && todayInfo.map((item)=>{
-                       const itemData = data[item[0]][item[1]]
-                       return <div>
-                         {itemData.course}({itemData.className})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
-                         <Button type="link" onClick={()=>handleCopy(itemData)}>复制通知</Button>
+                     { todayInfo && todayInfo.length && todayInfo.map((item,index)=>{
+                       const itemData = data[item[0]][item[1]];
+                       let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
+                        for(let i=0;i<index;i++){
+                          lastItemData = data[todayInfo[i][0]][todayInfo[i][1]]
+                          if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1){
+                            lastSame = true;
+                          }
+                        }
+                        for(let i=index+1;i<todayInfo.length;i++){
+                          nextItemdata = data[todayInfo[i][0]][todayInfo[i][1]]
+                          if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1){
+                            nextSame = true;
+                          }
+                        }
+                       
+                       return !lastSame && <div>
+                         {itemData.course}({itemData.className}{nextSame && <span style={{color:'red'}}>合</span>})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
+                         <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,nextSame)}>复制通知</Button>
                        </div>
                      })}
                </Card>)
