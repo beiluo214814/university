@@ -152,13 +152,13 @@ function App() {
                        let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
                        for(let i=0;i<index;i++){
                           lastItemData = data[todayInfo[i][0]][todayInfo[i][1]]
-                          if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1){
+                          if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer'){
                             lastSame = true;
                           }
                         }
                         for(let i=index+1;i<todayInfo.length;i++){
                           nextItemdata = data[todayInfo[i][0]][todayInfo[i][1]]
-                          if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1){
+                          if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer'){
                             nextSame = true;
                           }
                         }
@@ -196,13 +196,13 @@ function App() {
                        let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
                         for(let i=0;i<index;i++){
                           lastItemData = data[todayInfo[i][0]][todayInfo[i][1]]
-                          if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1){
+                          if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer'){
                             lastSame = true;
                           }
                         }
                         for(let i=index+1;i<todayInfo.length;i++){
                           nextItemdata = data[todayInfo[i][0]][todayInfo[i][1]]
-                          if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1){
+                          if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer'){
                             nextSame = true;
                           }
                         }
