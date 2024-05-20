@@ -21,7 +21,7 @@ const startDay = '20240226' //每学期开始日期
 
 async function fetchData() {
   const promises = [];  // 声明 Promise 对象数组
-  const classes=major[parsed.major];
+  const classes= parsed.classId ? [parsed.classId] : major[parsed.major];
   for (let i = 0,len=classes.length; i < len; i++) {  // 循环遍历
     const promise = fetch(`/api/course-schedule?classId=${classes[i]}`).then(
       response => response.json()
