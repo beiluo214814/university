@@ -4,26 +4,22 @@ import copy from 'copy-to-clipboard'
 import { Button,message,Col, Divider, Row,Card  } from 'antd';
 import * as moment from 'moment';
 // import 'moment/locale/pt-br';
-import './App.css';
+import './index.css';
 import queryString from 'query-string';
 import _ from 'lodash'
 
 moment.locale('zh-cn');
 
 const parsed = queryString.parse(window.location.search);
-const major = {
-  'computer':['234420000012509','234420000014517','234420000014518','234420000012015','234420000014021','234420000014020','224420000012031','224420000014031','224420000014032','224420000012006','224420000014008','224420000014007','244420000014030','244420000014031','244420000012023'],
- 'civilengineering':['224420000014047','224420000012032','224420000014037','224420000014010','224420000014015','234420000014022','234420000012016','234420000014024','234420000014519','234420000012510','234420000014520','244420000014032','244420000012022'],
- 'ecommerce':['224420000014033','224420000012039','234420000012017','234420000014023','234420000012511','234420000014516','224420000014012','20243442000001','244420000012021','244420000014029']
-}
+const teacherList = ['1101748424895442946','1101748424996106242','1101748425096769538','1101748425147101186','1101748425482645506','1101748425381982210','1614589770864762882']
 
 const startDay = '20240226' //每学期开始日期
 
 async function fetchData() {
   const promises = [];  // 声明 Promise 对象数组
-  const classes= parsed.classId ? [parsed.classId] : major[parsed.major];
-  for (let i = 0,len=classes.length; i < len; i++) {  // 循环遍历
-    const promise = fetch(`/api/course-schedule?classId=${classes[i]}`).then(
+  const teachers = parsed.teacherId?[parsed.teacherId]:teacherList;
+  for (let i = 0,len=teachers.length; i < len; i++) {  // 循环遍历
+    const promise = fetch(`/api/edu-admin-api/search/course-schedule?teacherId=${teachers[i]}`).then(
       response => response.json()
       ).then(json=>json.data);  // 请求接口并返回 Promise 对象
     promises.push(promise);  // 将 Promise 对象推入 Promise 对象数组
@@ -64,50 +60,27 @@ function isPC() {
   return !isMobile;
 }
 
-
-
-
-
 function App() {
-
   const [data, setData] = useState([]);
   const [dataIndex, setDataIndex] = useState({});
-
-  const handleCopy=(data,todayInfo,isSame)=>{
+  const handleCopy=(data,todayInfo)=>{
     todayInfo.push(true)
     setDataIndex(_.cloneDeep(dataIndex))
-    let dateDes = '今天'
-    if(data.week == '星期六' || data.week == '星期日' ){
-      dateDes = data.week
-    }
-    const classInfo = isSame?'':`${data.className.replace(/^\s+|\s+$/gm,'')}的`
-    copy(`${classInfo}同学们：
-    ${dateDes}${data.unit}有${data.teacher}老师的《${data.course}》课，
-    时间：${courseTime[data.unit]}，
-    线下地点：${data.classroom}，
-    线上地址：${data.liveClassroom}。`)
+    let dateDes = data.week
+    const classInfo = `${data.className.replace(/^\s+|\s+$/gm,'')}的`
+    copy(`${data.teacher}老师，您好：
+    ${dateDes}${data.unit}有《${data.course}》课，
+    请携带摄像头，上下课打卡签到签退，收到请回复，谢谢[抱拳]！`)
     message.success('复制成功！')
   }
 
   const renderCardContent = (todayInfo)=>{
     return todayInfo && todayInfo.length && todayInfo.map((item,index)=>{
       const itemData = data[item[0]][item[1]];
-      let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
-      for(let i=0;i<index;i++){
-         lastItemData = data[todayInfo[i][0]][todayInfo[i][1]]
-         if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer'){
-           lastSame = true;
-         }
-       }
-       for(let i=index+1;i<todayInfo.length;i++){
-         nextItemdata = data[todayInfo[i][0]][todayInfo[i][1]]
-         if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer'){
-           nextSame = true;
-         }
-       }
-      return !lastSame && <div>
-        {itemData.course}(<b>{itemData.teacher}</b>)(<b>{itemData.className}</b>{nextSame && <span style={{color:'red'}}>合</span>})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
-        <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,nextSame)}>复制通知</Button>
+     
+      return <div>
+        {itemData.course}(<b>{itemData.teacher}</b>)(<b>{itemData.className}</b>)<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
+        <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item)}>复制通知</Button>
       </div>
     })
   }
@@ -153,7 +126,7 @@ function App() {
       });
   }, []);
 
-
+console.log(222,dataIndex)
   return (
     <div className="App">
       {isPC() ? <header className="App-header">
