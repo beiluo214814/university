@@ -10,7 +10,10 @@ router.get('/api/course-schedule', async function (ctx, next) {
   await jszwyApiService.getCustomerList(ctx, next)
 })
 
-console.log(22)
+router.get('/api/edu-admin-api/search/course-schedule', async function (ctx, next) {
+  await jszwyApiService.getClassListByTeacher(ctx, next)
+})
+
 
 router.get(/^(?!\/api\/).*/,async ctx=>{
   ctx.body=`
