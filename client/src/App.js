@@ -17,7 +17,7 @@ const major = {
  'ecommerce':['224420000014033','224420000012039','234420000012017','234420000014023','234420000012511','234420000014516','224420000014012','20243442000001','244420000012021','244420000014029']
 }
 
-const startDay = '20240226' //每学期开始日期
+const startDay = '20240902' //每学期开始日期
 
 async function fetchData() {
   const promises = [];  // 声明 Promise 对象数组
@@ -161,7 +161,7 @@ function App() {
         (()=>{
           let weekTotal = 1,
           tags = []
-          while(weekTotal<22){
+          while(weekTotal<21){
             if(weekTotal>getDiff('week'))
             tags.push( 
               [<Divider orientation="left">第{weekTotal}周</Divider>,
