@@ -11,9 +11,9 @@ import _ from 'lodash'
 moment.locale('zh-cn');
 
 const parsed = queryString.parse(window.location.search);
-const teacherList = ['1101748424895442946','1101748424996106242','1101748425096769538','1101748425147101186','1101748425482645506','1101748425381982210','1614589770864762882']
+const teacherList = ['1829524782645686273','1101748426086625281','1829346901802004481','1101745422121906177','1186452271354396674','1101748425381982210','1374533736726437890','1432519544603131906','1432520790722461697','1101748069680562178','1614589770864762882','1199154424413241345','1101748424895442946','1101748425147101186','1101748425096769538']
 
-const startDay = '20240226' //每学期开始日期
+const startDay = '20240902' //每学期开始日期
 
 async function fetchData() {
   const promises = [];  // 声明 Promise 对象数组
@@ -30,12 +30,10 @@ async function fetchData() {
 }
 
 const courseTime ={
-  '上午':'9：30—11：30',
-  '下午':'14：30—16：30',
-  '晚上':'19：00—21：00'
+  '上午':'9：30—12：00',
+  '下午':'14：30—17：00',
+  '晚上':'19：00—21：30'
 }
-
-
 
 function getDiff(unit){
   // 假设我们有两个日期
@@ -69,8 +67,8 @@ function App() {
     let dateDes = data.week
     const classInfo = `${data.className.replace(/^\s+|\s+$/gm,'')}的`
     copy(`${data.teacher}老师，您好：
-    ${dateDes}${data.unit}有《${data.course}》课，
-    请携带摄像头，上下课打卡签到签退，收到请回复，谢谢[抱拳]！`)
+    ${dateDes}${data.unit}(${courseTime[data.unit]})有《${data.course}》课，
+    上下课打卡签到签退，收到请回复，谢谢[抱拳]！`)
     message.success('复制成功！')
   }
 
@@ -134,7 +132,7 @@ console.log(222,dataIndex)
         (()=>{
           let weekTotal = 1,
           tags = []
-          while(weekTotal<22){
+          while(weekTotal<21){
             if(weekTotal>getDiff('week'))
             tags.push( 
               [<Divider orientation="left">第{weekTotal}周</Divider>,
