@@ -95,7 +95,13 @@ let getClassListByTeacher = async (ctx, next) => {
                 });
                 /*****数据获取完成后 resolve提交****/
                 res.on('end', () => {
-                    resolve({ ...JSON.parse(content) });
+                    try {
+                        const jsonContent = JSON.parse(content)
+                        resolve({ ...jsonContent });
+                    } catch (error) {
+                        console.log(error)
+                    }
+                   
                 });
             })
 			/*****发送请求体*****/
