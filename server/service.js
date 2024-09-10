@@ -96,7 +96,7 @@ let getClassListByTeacher = async (ctx, next) => {
                 /*****数据获取完成后 resolve提交****/
                 res.on('end', () => {
                     try {
-                        if(content.indexOf('html'))
+                        if(content.indexOf('html')!=-1)
                             resolve({})
                         else{
                             const jsonContent = JSON.parse(content)
