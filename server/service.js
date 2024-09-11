@@ -37,7 +37,20 @@ let getCustomerList = async (ctx, next) => {
                 });
                 /*****数据获取完成后 resolve提交****/
                 res.on('end', () => {
-                    resolve({ ...JSON.parse(content) });
+                    try {
+                        if(content.indexOf('code') == 2){
+                            console.log(222,content)
+                            const jsonContent = JSON.parse(content)
+                            resolve({ ...jsonContent });
+                        }else{
+                            resolve({
+                                code:0,
+                                data:[]
+                            })
+                        }
+                    } catch (error) {
+                        console.log(error)
+                    }
                 });
             })
 			/*****发送请求体*****/
@@ -96,11 +109,15 @@ let getClassListByTeacher = async (ctx, next) => {
                 /*****数据获取完成后 resolve提交****/
                 res.on('end', () => {
                     try {
-                        if(content.indexOf('html')!=-1)
-                            resolve({})
-                        else{
+                        if(content.indexOf('code') == 2){
+                            console.log(222,content)
                             const jsonContent = JSON.parse(content)
                             resolve({ ...jsonContent });
+                        }else{
+                            resolve({
+                                code:0,
+                                data:[]
+                            })
                         }
                     } catch (error) {
                         console.log(error)
