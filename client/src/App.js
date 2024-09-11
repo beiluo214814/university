@@ -85,7 +85,7 @@ function App() {
     ${dateDes}${data.unit}有${data.teacher}老师的《${data.course}》课，
     时间：${courseTime[data.unit]}，
     线下地点：${data.classroom}，
-    线上地址：${data.liveClassroom}。`)
+    线上地址：${data.liveClassroom}。(仅第一次和最后一次课有直播和回放)`)
     message.success('复制成功！')
   }
 
