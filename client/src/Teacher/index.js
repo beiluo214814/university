@@ -61,24 +61,23 @@ function isPC() {
 function App() {
   const [data, setData] = useState([]);
   const [dataIndex, setDataIndex] = useState({});
-  const handleCopy=(data,todayInfo)=>{
+  const handleCopy=(data,todayInfo,dateInfo)=>{
     todayInfo.push(true)
     setDataIndex(_.cloneDeep(dataIndex))
     let dateDes = data.week
-    const classInfo = `${data.className.replace(/^\s+|\s+$/gm,'')}的`
     copy(`${data.teacher}老师，您好：
-    ${dateDes}${data.unit}(${courseTime[data.unit]})有《${data.course}》课，
+    ${dateDes}(${dateInfo})${data.unit}(${courseTime[data.unit]})有《${data.course}》课，
     上下课打卡签到签退，收到请回复，谢谢[抱拳]！`)
     message.success('复制成功！')
   }
 
-  const renderCardContent = (todayInfo)=>{
+  const renderCardContent = (todayInfo,dateInfo)=>{
     return todayInfo && todayInfo.length && todayInfo.map((item,index)=>{
       const itemData = data[item[0]][item[1]];
      
       return <div>
         {itemData.course}(<b>{itemData.teacher}</b>)(<b>{itemData.className}</b>)<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
-        <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item)}>复制通知</Button>
+        <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,dateInfo)}>复制通知</Button>
       </div>
     })
   }
@@ -124,7 +123,6 @@ function App() {
       });
   }, []);
 
-console.log(222,dataIndex)
   return (
     <div className="App">
       {isPC() ? <header className="App-header">
@@ -143,10 +141,11 @@ console.log(222,dataIndex)
                 item=[]
                 while(day<8){
                   const todayInfo = dataIndex[(weekTotal-1)*7+day]
+                  const dateInfo = moment(startDay).add((weekTotal-1)*7+day-1,'day').format('YYYY-MM-DD')
                     item.push(<Col span={3}>
-                      <Card title={`${moment(startDay).add((weekTotal-1)*7+day-1,'day').format('YYYY-MM-DD')}(周${day})`} bordered={false}>
+                      <Card title={`${dateInfo}(周${day})`} bordered={false}>
                       {
-                        renderCardContent(todayInfo,data)
+                        renderCardContent(todayInfo,dateInfo)
                       }
                       </Card>
                     </Col>)
@@ -171,9 +170,10 @@ console.log(222,dataIndex)
               const dayIndex = getDiff('day')+1+count;
               const todayInfo = dataIndex[dayIndex];
               const momentObj = moment().add(count,'days')
-              item.push(<Card title={`${momentObj.format('YYYY-MM-DD')}(${momentObj.format('dddd')})`} bordered={false}>
+              const dateInfo = momentObj.format('YYYY-MM-DD')
+              item.push(<Card title={`${dateInfo}(${momentObj.format('dddd')})`} bordered={false}>
                       {
-                        renderCardContent(todayInfo,data)
+                        renderCardContent(todayInfo,dateInfo)
                       }
                </Card>)
               count++
