@@ -65,9 +65,7 @@ function App() {
     todayInfo.push(true)
     setDataIndex(_.cloneDeep(dataIndex))
     let dateDes = data.week
-    copy(`${data.teacher}老师，您好：
-    ${dateDes}(${dateInfo})${data.unit}(${courseTime[data.unit]})有《${data.course}》课，
-    上下课打卡签到签退，收到请回复，谢谢[抱拳]！`)
+    copy(`${data.teacher}老师，您好！您今天${data.unit}（${dateDes}，${dateInfo}，${courseTime[data.unit]}）有《${data.course}》课，上下课打卡签到签退，收到请回复，谢谢[抱拳]！`)
     message.success('复制成功！')
   }
 
