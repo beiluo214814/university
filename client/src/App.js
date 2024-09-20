@@ -39,6 +39,16 @@ const courseTime ={
   '晚上':'19：00—21：30'
 }
 
+const weekData={
+  '星期一':1,
+  '星期二':2,
+  '星期三':3,
+  '星期四':4,
+  '星期五':5,
+  '星期六':6,
+  '星期日':7
+}
+
 
 
 function getDiff(unit){
@@ -72,8 +82,12 @@ function App() {
 
   const [data, setData] = useState([]);
   const [dataIndex, setDataIndex] = useState({});
-
-  const handleCopy=(data,todayInfo,isSame)=>{
+  const [dataClass,setDataClass] = useState({});
+  const handleCopy=(data,todayInfo,isSame,currentTime,classNum)=>{
+    let isOnline = false;
+    if(currentTime ==1 || currentTime==classNum){
+      isOnline = true
+    }
     todayInfo.push(true)
     setDataIndex(_.cloneDeep(dataIndex))
     let dateDes = '今天'
@@ -84,14 +98,31 @@ function App() {
     copy(`${classInfo}同学们：
     ${dateDes}${data.unit}有${data.teacher}老师的《${data.course}》课，
     时间：${courseTime[data.unit]}，
-    线下地点：${data.classroom}，
-    线上地址：${data.liveClassroom}。(仅第一次和最后一次课有直播和回放)`)
+    线下地点：${data.classroom}${isOnline ? ',':'。'}
+    ${isOnline ? '线上地址：'+data.liveClassroom+'。':''}`)
     message.success('复制成功！')
   }
 
-  const renderCardContent = (todayInfo)=>{
+  const renderCardContent = (todayInfo,dateInfo)=>{
     return todayInfo && todayInfo.length && todayInfo.map((item,index)=>{
       const itemData = data[item[0]][item[1]];
+
+      const weekClassName = itemData.className.trim()
+      const courseTrim = itemData.course.trim()
+      const keyStr = `${weekClassName}+${courseTrim}`
+      const classNum = dataClass[keyStr].weekTime.length
+      const week = dataClass[keyStr].week
+      let classTime = '';
+      let currentTime = 0;
+      if(classNum){
+        for(let i=0;i<classNum;i++){
+          if(moment(startDay).add((dataClass[keyStr].weekTime[i]-1)*7+weekData[week]-1,'day').format('YYYY-MM-DD') === dateInfo){
+            classTime = `${i+1}/${classNum}`
+            currentTime = i+1
+          }
+        }
+      }
+
       let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
       for(let i=0;i<index;i++){
          lastItemData = data[todayInfo[i][0]][todayInfo[i][1]]
@@ -106,8 +137,8 @@ function App() {
          }
        }
       return !lastSame && <div>
-        {itemData.course}(<b>{itemData.teacher}</b>)(<b>{itemData.className}</b>{nextSame && <span style={{color:'red'}}>合</span>})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
-        <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,nextSame)}>复制通知</Button>
+        {itemData.course}({classTime})(<b>{itemData.teacher}</b>)(<b>{itemData.className}</b>{nextSame && <span style={{color:'red'}}>合</span>})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
+        <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,nextSame,currentTime,classNum)}>复制通知</Button>
       </div>
     })
   }
@@ -117,21 +148,25 @@ function App() {
       fetchData()
       .then(result => {
         // 处理合并后的数据
-        const weekData={
-          '星期一':1,
-          '星期二':2,
-          '星期三':3,
-          '星期四':4,
-          '星期五':5,
-          '星期六':6,
-          '星期日':7
-        }
-        const tempObj = {}
-        //将下标记录至日期上，便于渲染获取
+        
+        const tempObj = {}//将下标记录至日期上，便于渲染获取
+        const dataClass = []//将每门课程时间组织排列起来，用于计算当前为第几次课
         result.forEach((itemWrapper,indexWrapper)=>{
           itemWrapper.forEach((item,index)=>{
             if(!item.weekTime){
               return
+            }
+            const weekClassName = item.className.trim()
+            const courseTrim = item.course.trim()
+            const keyStr = `${weekClassName}+${courseTrim}`
+            if(dataClass.hasOwnProperty(keyStr)){
+              dataClass[keyStr].weekTime = dataClass[keyStr].weekTime.concat(item.weekTime.split(','))
+              dataClass[keyStr].weekTime.sort((x,y)=>x-y)
+            }else{
+              const temp = {}
+              temp['weekTime'] =  item.weekTime.split(',')
+              temp['week'] =  item.week
+              dataClass[keyStr] = temp
             }
             const weekArray = item.weekTime.split(',')
             weekArray.forEach(item1=>{
@@ -144,6 +179,7 @@ function App() {
             })
           })
         })
+        setDataClass(dataClass)
         setDataIndex(tempObj)
         setData(result)
       })
@@ -172,10 +208,11 @@ function App() {
                 item=[]
                 while(day<8){
                   const todayInfo = dataIndex[(weekTotal-1)*7+day]
+                  const dateInfo = moment(startDay).add((weekTotal-1)*7+day-1,'day').format('YYYY-MM-DD')
                     item.push(<Col span={3}>
-                      <Card title={`${moment(startDay).add((weekTotal-1)*7+day-1,'day').format('YYYY-MM-DD')}(周${day})`} bordered={false}>
+                      <Card title={`${dateInfo}(周${day})`} bordered={false}>
                       {
-                        renderCardContent(todayInfo,data)
+                        renderCardContent(todayInfo,dateInfo)
                       }
                       </Card>
                     </Col>)
@@ -202,7 +239,7 @@ function App() {
               const momentObj = moment().add(count,'days')
               item.push(<Card title={`${momentObj.format('YYYY-MM-DD')}(${momentObj.format('dddd')})`} bordered={false}>
                       {
-                        renderCardContent(todayInfo,data)
+                        renderCardContent(todayInfo,momentObj.format('YYYY-MM-DD'))
                       }
                </Card>)
               count++
