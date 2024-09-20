@@ -35,6 +35,16 @@ const courseTime ={
   '晚上':'19：00—21：30'
 }
 
+const weekData={
+  '星期一':1,
+  '星期二':2,
+  '星期三':3,
+  '星期四':4,
+  '星期五':5,
+  '星期六':6,
+  '星期日':7
+}
+
 function getDiff(unit){
   // 假设我们有两个日期
 var startDate = moment(startDay); // 开始日期
@@ -61,11 +71,16 @@ function isPC() {
 function App() {
   const [data, setData] = useState([]);
   const [dataIndex, setDataIndex] = useState({});
-  const handleCopy=(data,todayInfo,dateInfo)=>{
+  const [dataClass,setDataClass] = useState({});
+  const handleCopy=(data,todayInfo,dateInfo,currentTime,classNum)=>{
+    let isOnline = false;
+    if(currentTime ==1 || currentTime==classNum){
+      isOnline = true
+    }
     todayInfo.push(true)
     setDataIndex(_.cloneDeep(dataIndex))
     let dateDes = data.week
-    copy(`${data.teacher}老师，您好！您今天${data.unit}（${dateDes}，${dateInfo}，${courseTime[data.unit]}）有《${data.course}》课，上下课打卡签到签退，请提前至少10分钟到教室，收到请回复，谢谢[抱拳]！`)
+    copy(`${data.teacher}老师，您好！您今天${data.unit}（${dateDes}，${dateInfo}，${courseTime[data.unit]}）有《${data.course}》课，${isOnline?'请携带摄像头，':''}上下课打卡签到签退，请提前至少10分钟到教室，收到请回复，谢谢[抱拳]！`)
     message.success('复制成功！')
   }
 
@@ -73,33 +88,59 @@ function App() {
     return todayInfo && todayInfo.length && todayInfo.map((item,index)=>{
       const itemData = data[item[0]][item[1]];
      
+      const weekClassName = itemData.className.trim()
+      const weekTeacher = itemData.teacher.trim()
+      const courseTrim = itemData.course.trim()
+      const keyStr = `${weekClassName}+${weekTeacher}+${courseTrim}`
+      const classNum = dataClass[keyStr].weekTime.length
+      const week = dataClass[keyStr].week
+      let classTime = '';
+      let currentTime = 0;
+      if(classNum){
+        for(let i=0;i<classNum;i++){
+          if(moment(startDay).add((dataClass[keyStr].weekTime[i]-1)*7+weekData[week]-1,'day').format('YYYY-MM-DD') === dateInfo){
+            classTime = `${i+1}/${classNum}`
+            currentTime = i+1
+          }
+        }
+      }
+
       return <div>
-        {itemData.course}(<b>{itemData.teacher}</b>)(<b>{itemData.className}</b>)<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
-        <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,dateInfo)}>复制通知</Button>
+        {itemData.course}({classTime})(<b>{itemData.teacher}</b>)(<b>{itemData.className}</b>)<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
+        <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,dateInfo,currentTime,classNum)}>复制通知</Button>
       </div>
     })
   }
 
   useEffect(() => {
+      let ignore = false;
       // 调用 fetchData() 方法获取所有数据
+      
       fetchData()
       .then(result => {
-        // 处理合并后的数据
-        const weekData={
-          '星期一':1,
-          '星期二':2,
-          '星期三':3,
-          '星期四':4,
-          '星期五':5,
-          '星期六':6,
-          '星期日':7
+        if (ignore) {
+          return
         }
+        // 处理合并后的数据
         const tempObj = {}
         //将下标记录至日期上，便于渲染获取
         result.forEach((itemWrapper,indexWrapper)=>{
           itemWrapper.forEach((item,index)=>{
             if(!item.weekTime){
               return
+            }
+            const weekClassName = item.className.trim()
+            const weekTeacher = item.teacher.trim()
+            const courseTrim = item.course.trim()
+            const keyStr = `${weekClassName}+${weekTeacher}+${courseTrim}`
+            if(dataClass.hasOwnProperty(keyStr)){
+              dataClass[keyStr].weekTime = dataClass[keyStr].weekTime.concat(item.weekTime.split(','))
+              dataClass[keyStr].weekTime.sort((x,y)=>x-y)
+            }else{
+              const temp = {}
+              temp['weekTime'] =  item.weekTime.split(',')
+              temp['week'] =  item.week
+              dataClass[keyStr] = temp
             }
             const weekArray = item.weekTime.split(',')
             weekArray.forEach(item1=>{
@@ -112,6 +153,7 @@ function App() {
             })
           })
         })
+        setDataClass(dataClass)
         setDataIndex(tempObj)
         setData(result)
       })
@@ -119,6 +161,9 @@ function App() {
         // 处理错误
         console.error(error);
       });
+      return () => {
+        ignore = true;
+      };
   }, []);
 
   return (
