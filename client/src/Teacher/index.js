@@ -106,7 +106,7 @@ function App() {
       }
 
       return <div>
-        {itemData.course}({classTime})(<b>{itemData.teacher}</b>)(<b>{itemData.className}</b>)<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
+        {itemData.course}({classTime})(<b>{itemData.teacher}</b>)({itemData.classroom})(<b>{itemData.className}</b>)<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
         <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,dateInfo,currentTime,classNum)}>复制通知</Button>
       </div>
     })
