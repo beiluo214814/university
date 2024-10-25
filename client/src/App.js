@@ -12,7 +12,7 @@ moment.locale('zh-cn');
 
 const parsed = queryString.parse(window.location.search);
 const major = {
-  'computer':['244420000014517','244420000014516','244420000012512','234420000012509','234420000014517','234420000014518','234420000012015','234420000014021','234420000014020','224420000012031','224420000014031','224420000014032','224420000012006','224420000014008','224420000014007','244420000014030','244420000014031','244420000012023'],
+  'computer':['244420000014517','244420000014516','244420000012512','244420000014519','234420000012509','234420000014517','234420000014518','234420000012015','234420000014021','234420000014020','224420000012031','224420000014031','224420000014032','224420000012006','224420000014008','224420000014007','244420000014030','244420000014031','244420000012023'],
  'civilengineering':['244420000014518','244420000012513','224420000014047','224420000012032','224420000014037','224420000014010','224420000014015','234420000014022','234420000012016','234420000014024','234420000014519','234420000012510','234420000014520','244420000014032','244420000012022'],
  'ecommerce':['244420000014515','244420000012514','224420000014033','224420000012039','234420000012017','234420000014023','234420000012511','234420000014516','224420000014012','20243442000001','244420000012021','244420000014029']
 }
@@ -123,10 +123,14 @@ function App() {
         }
       }
 
+      if(itemData.teacher=='王志虹'){
+        console.log(dataClass,classTime,currentTime)
+      }
+
       let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
       for(let i=0;i<index;i++){
          lastItemData = data[todayInfo[i][0]][todayInfo[i][1]]
-         if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer'){
+         if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer' && lastItemData.className.indexOf('大数据')==-1 && itemData.className.indexOf('大数据')==-1){
            lastSame = true;
          }
        }
