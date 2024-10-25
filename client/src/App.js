@@ -111,20 +111,17 @@ function App() {
       const courseTrim = itemData.course.trim()
       const keyStr = `${weekClassName}+${courseTrim}`
       const classNum = dataClass[keyStr].weekTime.length
-      const week = dataClass[keyStr].week
       let classTime = '';
       let currentTime = 0;
+
+      
       if(classNum){
         for(let i=0;i<classNum;i++){
-          if(moment(startDay).add((dataClass[keyStr].weekTime[i]-1)*7+weekData[week]-1,'day').format('YYYY-MM-DD') === dateInfo){
+          if(moment(startDay).add((dataClass[keyStr].weekTime[i].times-1)*7+weekData[dataClass[keyStr].weekTime[i].week]-1,'day').format('YYYY-MM-DD') === dateInfo){
             classTime = `${i+1}/${classNum}`
             currentTime = i+1
           }
         }
-      }
-
-      if(itemData.teacher=='王志虹'){
-        console.log(dataClass,classTime,currentTime)
       }
 
       let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
@@ -163,13 +160,26 @@ function App() {
             const weekClassName = item.className.trim()
             const courseTrim = item.course.trim()
             const keyStr = `${weekClassName}+${courseTrim}`
+
             if(dataClass.hasOwnProperty(keyStr)){
-              dataClass[keyStr].weekTime = dataClass[keyStr].weekTime.concat(item.weekTime.split(','))
-              dataClass[keyStr].weekTime.sort((x,y)=>x-y)
+              const weekTimeArray =  item.weekTime.split(',');
+              weekTimeArray.map((item1,index)=>{
+                weekTimeArray[index] = {
+                  times:item1,
+                  week:item.week
+                }
+              })
+              dataClass[keyStr].weekTime = dataClass[keyStr].weekTime.concat(weekTimeArray)
+              dataClass[keyStr].weekTime.sort((x,y)=>x.times-y.times)
             }else{
               const temp = {}
               temp['weekTime'] =  item.weekTime.split(',')
-              temp['week'] =  item.week
+              temp['weekTime'].map((item1,index)=>{
+                temp['weekTime'][index]={
+                  times:item1,
+                  week:item.week
+                }
+              })
               dataClass[keyStr] = temp
             }
             const weekArray = item.weekTime.split(',')
