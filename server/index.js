@@ -28,7 +28,7 @@ router.get(/^(?!\/api\/).*/,async ctx=>{
   </head>
   <body>
   <div id="root"></div>
-  <script defer src="http://${process.argv,process.argv[2] == '118.195.233.117'?'118.195.233.117':myip}:5000/static/js/bundle.js"></script>
+  <script defer src="http://${process.argv,process.argv[2] == '119.45.220.76'?'119.45.220.76':myip}:5000/static/js/bundle.js"></script>
   </body>
 </html>
   `;

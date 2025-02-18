@@ -1,7 +1,7 @@
 module.exports = {
   apps : [{
     name: 'myServer',
-    script: 'npm start 118.195.233.117',
+    script: 'npm start 119.45.220.76',
     instances: 1,
     autorestart: true,
     watch: false,
