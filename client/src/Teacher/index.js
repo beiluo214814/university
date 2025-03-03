@@ -79,8 +79,12 @@ function App() {
     }
     todayInfo.push(true)
     setDataIndex(_.cloneDeep(dataIndex))
+    let todayDes = '今天'
+    if(data.week == '星期六' || data.week == '星期日' ){
+      todayDes = '本周末'
+    }
     let dateDes = data.week
-    copy(`${data.teacher}老师，您好！您今天${data.unit}（${dateDes}，${dateInfo}，${courseTime[data.unit]}）有《${data.course}》课，${isOnline?'请携带摄像头，':''}上下课打卡签到签退，请提前至少10分钟到教室，收到请回复，谢谢[抱拳]！`)
+    copy(`${data.teacher}老师，您好！您${todayDes}（${dateDes}，${data.unit}，${dateInfo}，${courseTime[data.unit]}）有《${data.course}》课，${isOnline?'请携带摄像头，':''}上下课打卡签到签退，请提前至少10分钟到教室，收到请回复，谢谢[抱拳]！`)
     message.success('复制成功！')
   }
 
