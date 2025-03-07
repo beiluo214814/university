@@ -104,7 +104,6 @@ function App() {
   }
 
   const renderCardContent = (todayInfo,dateInfo)=>{
-    console.log(222,todayInfo)
     return todayInfo && todayInfo.length && todayInfo.map((item,index)=>{
       const itemData = data[item[0]][item[1]];
 
@@ -115,7 +114,6 @@ function App() {
       let classTime = '';
       let currentTime = 0;
 
-      console.log(222,dateInfo)
       if(classNum){
         for(let i=0;i<classNum;i++){
           if(moment(startDay).add((dataClass[keyStr].weekTime[i].times-1)*7+weekData[dataClass[keyStr].weekTime[i].week]-1,'day').format('YYYY-MM-DD') === dateInfo){
@@ -139,7 +137,7 @@ function App() {
          }
        }
       return !lastSame && <div>
-        {itemData.course}({classTime})(<b>{itemData.teacher}</b>)({itemData.classroom})(<b>{itemData.className}</b>{nextSame && <span style={{color:'red'}}>合</span>})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
+        {itemData.course}({classTime})(<b>{itemData.teacher}</b>)({itemData.unit})({itemData.classroom})(<b>{itemData.className}</b>{nextSame && <span style={{color:'red'}}>合</span>})<a target='_blank' href={itemData.liveClassroom}>进直播间</a>
         <Button type="link" style={{'color':item[2] ?'red':''}} onClick={()=>handleCopy(itemData,item,nextSame,currentTime,classNum)}>复制通知</Button>
       </div>
     })
