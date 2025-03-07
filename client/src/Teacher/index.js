@@ -119,7 +119,7 @@ function App() {
   useEffect(() => {
       let ignore = false;
       // 调用 fetchData() 方法获取所有数据
-      
+
       fetchData()
       .then(result => {
         if (ignore) {

@@ -104,6 +104,7 @@ function App() {
   }
 
   const renderCardContent = (todayInfo,dateInfo)=>{
+    console.log(222,todayInfo)
     return todayInfo && todayInfo.length && todayInfo.map((item,index)=>{
       const itemData = data[item[0]][item[1]];
 
@@ -114,7 +115,7 @@ function App() {
       let classTime = '';
       let currentTime = 0;
 
-      
+      console.log(222,dateInfo)
       if(classNum){
         for(let i=0;i<classNum;i++){
           if(moment(startDay).add((dataClass[keyStr].weekTime[i].times-1)*7+weekData[dataClass[keyStr].weekTime[i].week]-1,'day').format('YYYY-MM-DD') === dateInfo){
@@ -127,13 +128,13 @@ function App() {
       let lastItemData = {},nextItemdata = {},lastSame = false,nextSame = false;
       for(let i=0;i<index;i++){
          lastItemData = data[todayInfo[i][0]][todayInfo[i][1]]
-         if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer' && lastItemData.className.indexOf('大数据')==-1 && itemData.className.indexOf('大数据')==-1){
+         if(lastItemData.course == itemData.course && lastItemData.className.substr(0,3) == itemData.className.substr(0,3) && lastItemData.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer' && lastItemData.className.indexOf('大数据')==-1 && itemData.className.indexOf('大数据')==-1 && lastItemData.unit == itemData.unit){
            lastSame = true;
          }
        }
        for(let i=index+1;i<todayInfo.length;i++){
          nextItemdata = data[todayInfo[i][0]][todayInfo[i][1]]
-         if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer'){
+         if(nextItemdata.course == itemData.course && nextItemdata.className.substr(0,3) == itemData.className.substr(0,3) && nextItemdata.className.indexOf('专')!=-1 && itemData.className.indexOf('专')!=-1 && parsed.major=='computer' && nextItemdata.unit == itemData.unit){
            nextSame = true;
          }
        }
@@ -166,8 +167,7 @@ function App() {
               weekTimeArray.map((item1,index)=>{
                 weekTimeArray[index] = {
                   times:item1,
-                  week:item.week
-                }
+                  week:item.week                }
               })
               dataClass[keyStr].weekTime = dataClass[keyStr].weekTime.concat(weekTimeArray)
               dataClass[keyStr].weekTime.sort((x,y)=>x.times-y.times)
