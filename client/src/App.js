@@ -17,7 +17,7 @@ const major = {
  'ecommerce':['254420000014005','254420000012005','20253442000004','244420000014515','244420000012514','234420000012017','234420000014023','234420000012511','234420000014516','20243442000001','244420000012021','244420000014029']
 }
 
-const startDay = '20250217' //每学期开始日期
+const startDay = '20250901' //每学期开始日期
 
 async function fetchData() {
   const promises = [];  // 声明 Promise 对象数组
@@ -152,6 +152,7 @@ function App() {
         const tempObj = {}//将下标记录至日期上，便于渲染获取
         const dataClass = []//将每门课程时间组织排列起来，用于计算当前为第几次课
         result.forEach((itemWrapper,indexWrapper)=>{
+          if(itemWrapper)
           itemWrapper.forEach((item,index)=>{
             if(!item.weekTime){
               return
@@ -210,7 +211,7 @@ function App() {
           let weekTotal = 1,
           tags = []
           while(weekTotal<21){
-            if(weekTotal>getDiff('week'))
+            // if(weekTotal>getDiff('week'))
             tags.push( 
               [<Divider orientation="left">第{weekTotal}周</Divider>,
             <Row justify="space-between"  align="top" gutter={[16, 16]} className='App-row-wrapper'>

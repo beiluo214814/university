@@ -39,7 +39,6 @@ let getCustomerList = async (ctx, next) => {
                 res.on('end', () => {
                     try {
                         if(content.indexOf('code') == 2){
-                            console.log(222,content)
                             const jsonContent = JSON.parse(content)
                             resolve({ ...jsonContent });
                         }else{

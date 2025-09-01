@@ -13,7 +13,7 @@ moment.locale('zh-cn');
 const parsed = queryString.parse(window.location.search);
 const teacherList = ['1101748424895442946','1108187562495180802','1787756854237859842','1101748425096769538']
 
-const startDay = '20250217' //每学期开始日期
+const startDay = '20250901' //每学期开始日期
 
 async function fetchData() {
   const promises = [];  // 声明 Promise 对象数组
