@@ -84,10 +84,11 @@ function App() {
   const [dataIndex, setDataIndex] = useState({});
   const [dataClass,setDataClass] = useState({});
   const handleCopy=(data,todayInfo,isSame,currentTime,classNum)=>{
-    let isOnline = false;
-    if(currentTime ==1 || currentTime==classNum){
-      isOnline = true
-    }
+    // let isOnline = false;
+    // if(currentTime ==1 || currentTime==classNum){
+    //   isOnline = true
+    // }
+    let isOnline = true; //全是直播课
     todayInfo.push(true)
     setDataIndex(_.cloneDeep(dataIndex))
     let dateDes = '今天'
@@ -99,7 +100,8 @@ function App() {
     ${dateDes}${data.unit}有${data.teacher}老师的《${data.course}》课，
     时间：${courseTime[data.unit]}，
     线下地点：${data.classroom}${isOnline ? ',':'。'}
-    ${isOnline ? '线上地址：'+data.liveClassroom+'。':''}`)
+    ${isOnline ? '线上地址：'+data.liveClassroom+'。':''}`
+  )
     message.success('复制成功！')
   }
 

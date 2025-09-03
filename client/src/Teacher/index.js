@@ -73,10 +73,11 @@ function App() {
   const [dataIndex, setDataIndex] = useState({});
   const [dataClass,setDataClass] = useState({});
   const handleCopy=(data,todayInfo,dateInfo,currentTime,classNum)=>{
-    let isOnline = false;
-    if(currentTime ==1 || currentTime==classNum){
-      isOnline = true
-    }
+    // let isOnline = false;
+    // if(currentTime ==1 || currentTime==classNum){
+    //   isOnline = true
+    // }
+    let isOnline = true;
     todayInfo.push(true)
     setDataIndex(_.cloneDeep(dataIndex))
     let todayDes = '今天'
