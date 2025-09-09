@@ -213,7 +213,7 @@ function App() {
           let weekTotal = 1,
           tags = []
           while(weekTotal<21){
-            // if(weekTotal>getDiff('week'))
+            if(weekTotal>getDiff('week'))
             tags.push( 
               [<Divider orientation="left">第{weekTotal}周</Divider>,
             <Row justify="space-between"  align="top" gutter={[16, 16]} className='App-row-wrapper'>

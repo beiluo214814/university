@@ -11,7 +11,10 @@ import _ from 'lodash'
 moment.locale('zh-cn');
 
 const parsed = queryString.parse(window.location.search);
-const teacherList = ['1101748424895442946','1108187562495180802','1787756854237859842','1101748425096769538']
+const teacherList = ['1787756854237859842','1135377975869288449','1101748069680562178','1101748425096769538',
+                      '1101748425381982210','1186452271354396674','1432520790722461697','1101748425147101186',
+                      '1101748424996106242','1101748424895442946','1432901495876993025','1374533736726437890'
+]
 
 const startDay = '20250901' //每学期开始日期
 
@@ -85,7 +88,7 @@ function App() {
       todayDes = '本周末'
     }
     let dateDes = data.week
-    copy(`${data.teacher}老师，您好！您${todayDes}（${dateDes}，${data.unit}，${dateInfo}，${courseTime[data.unit]}）有《${data.course}》课，${isOnline?'请携带摄像头，':''}上下课打卡签到签退，请提前至少10分钟到教室，收到请回复，谢谢[抱拳]！`)
+    copy(`${data.teacher}老师，您${todayDes}（${dateDes}，${data.unit}，${dateInfo}，${courseTime[data.unit]}）有《${data.course}》课，${isOnline?'请携带摄像头，':''}上下课打卡签到签退，请提前至少10分钟到教室，收到请回复，谢谢[抱拳]！`)
     message.success('复制成功！')
   }
 
