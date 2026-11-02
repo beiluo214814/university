@@ -100,7 +100,7 @@ function App() {
     ${dateDes}${data.unit}有${data.teacher}老师的《${data.course}》课，
     时间：${courseTime[data.unit]}，
     线下地点：${data.classroom}${isOnline ? ',':'。'}
-    ${isOnline ? '线上地址：国开学习网（https://one.ouchn.cn/ 右上角“登陆”进去找对应课程听课）'+data.liveClassroom+'。':''}`
+    ${isOnline ? '线上地址：国开学习网（https://one.ouchn.cn/ 右上角“登陆”进去找对应课程听课）。':''}`
   )
     message.success('复制成功！')
   }
