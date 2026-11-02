@@ -15,7 +15,7 @@ const teacherList = ['1101748424895442946','1432519544603131906','11017484250967
                       '1108187562495180802','1135377975869288449'
 ]
 
-const startDay = '20260302' //每学期开始日期
+const startDay = '20260831' //每学期开始日期
 
 async function fetchData() {
   const promises = [];  // 声明 Promise 对象数组

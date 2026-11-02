@@ -17,7 +17,7 @@ const major = {
  'ecommerce':['264420000012006','264420000014011','264420000014010','264420000014009','254420000014517','254420000014518','254420000014519','254420000012504','254420000014005','254420000012005','20253442000004','244420000014515','244420000012514','20243442000001','244420000012021','244420000014029']
 }
 
-const startDay = '20260302' //每学期开始日期
+const startDay = '20260831' //每学期开始日期
 
 async function fetchData() {
   const promises = [];  // 声明 Promise 对象数组
@@ -100,7 +100,7 @@ function App() {
     ${dateDes}${data.unit}有${data.teacher}老师的《${data.course}》课，
     时间：${courseTime[data.unit]}，
     线下地点：${data.classroom}${isOnline ? ',':'。'}
-    ${isOnline ? '线上地址：'+data.liveClassroom+'。':''}`
+    ${isOnline ? '线上地址：国开学习网（https://one.ouchn.cn/ 右上角“登陆”进去找对应课程听课）'+data.liveClassroom+'。':''}`
   )
     message.success('复制成功！')
   }
